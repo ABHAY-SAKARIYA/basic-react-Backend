@@ -27,7 +27,7 @@ router.post("/signin",[
         // sending bad response for error
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.status(400).json({error: error.array() });
+            return res.json({error: error.array() });
         }
         
         // get Data and Create an Secure Password using Bcrypt Js.
@@ -42,7 +42,7 @@ router.post("/signin",[
         const user =  await User.create({
             username : username,
             password: password
-        }).catch(err => res.json({error: "Duplicate Name Found Enter Again."})); // When Unique Values is Required this is to show error when duplicate value found.
+        }).catch(err => res.json({error: "Duplicate Name Found Enter Again.",type:"danger"})); // When Unique Values is Required this is to show error when duplicate value found.
 
         const data = {
             User: {
@@ -52,10 +52,10 @@ router.post("/signin",[
         const authToken = jwt.sign(data,jwt_secret);
 
 
-        return res.json({authToken:authToken});
+        return res.json({authToken:authToken,type:"success"});
         
     }catch (err){
-        return res.status(500).send("Internal Server Error!")        
+        return res.status(500).json({error:"Internal Server Error!"})        
     }
 });
 
@@ -69,7 +69,7 @@ router.post("/login",[
         // if fields are not correct, send bad response
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.status(400).json({error:error.array()});
+            return res.json({error:error.array()});
         }
 
         // get user input
@@ -80,14 +80,14 @@ router.post("/login",[
         const user = await User.findOne({username:username});
 
         if(!user){
-            return res.status(400).json("Enter Correct Values.");
+            return res.json({error: "No user Found!",type:"danger"});
         }
 
         // if user found then compare entered passwords from hash password.else show bad response.
         const passwordCompare = await bcrypt.compare(password,user.password);
 
         if(!passwordCompare){
-            return res.status(400).json("Enter Correct Values.");
+            return res.json({error:"Enter Correct Values.",type:"danger"});
         }
 
         const data = {
@@ -97,7 +97,7 @@ router.post("/login",[
         }
         const authToken = jwt.sign(data,jwt_secret);
 
-        return res.json({authToken:authToken});
+        return res.json({authToken:authToken,type:"success"});
     }catch{
         return res.status(500).send("Internal Server Error!")
     }

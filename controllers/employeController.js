@@ -12,9 +12,9 @@ router.get("/get", fetchuser, async (req,res)=>{
         // Find Employees Data
         const data = await employees.find({user : req.user.id});
         // Respond With Data
-        return res.json(data);
+        return res.json({data:data,type:"success"});
     }catch{
-        return res.json({error:"Something Went wrong"})
+        return res.json({error:"Something Went wrong",type:"danger"})
     }
 });
 
@@ -29,7 +29,7 @@ router.post("/add", fetchuser, [
         // Validation error, showing bad request and error
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.status(400).send("Enter Valid Values");
+            return res.json({error:"Enter Valid Values",type:"danger"});
         }
 
         // Get The Data from Request
@@ -46,10 +46,10 @@ router.post("/add", fetchuser, [
         });
 
         // Respond with Data
-        return res.json({added:true})
+        return res.json({added:true,type:"success"})
     }catch (err){
         console.log(err);
-        return res.json({added:false})
+        return res.json({error:"Something Went Wrong",type:"danger"})
     }
 });
 
@@ -72,7 +72,7 @@ router.put("/update/:id", fetchuser, [
          // Validation error, showing bad request and error
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.status(400).send("Enter Valid Values");
+            return res.json({error:"Enter Valid Values",type:"danger"});
         }
         
         // Check feilds to be updated and creata an new object
@@ -84,11 +84,11 @@ router.put("/update/:id", fetchuser, [
         const d = await employees.findById(employeid);
 
         if(!d){
-            return res.status(404).send("Not Found");
+            return res.json({error:"No Data Related to Id Found",type:"danger"});
         }
 
         if(d.user.toString() !== req.user.id){
-            return res.status(401).send("Not Allowed");
+            return res.json({error:"Not Allowed",type:"danger"});
         }
 
         // find and update the employee detail by id
@@ -96,9 +96,9 @@ router.put("/update/:id", fetchuser, [
         await employees.findByIdAndUpdate(employeid,newData);
 
         // Respond
-        return res.json({updated:true});
+        return res.json({updated:true,type:"success"});
     }catch {
-        return res.json({updated:false});
+        return res.json({error:"Something Went Wrong",type:"danger"});
     }
 });
 
@@ -111,19 +111,19 @@ router.delete("/del/:id", fetchuser, async (req,res) => {
         const d = await employees.findById(employeid);
 
         if(!d){
-            return res.status(404).send("Not Found");
+            return res.json({error:"No Data Related to Id Found"});
         }
         if(d.user.toString() !== req.user.id){
-            return res.status(401).send("Not Allowed");
+            return res.json({error:"Not Allowed",type:"danger"});
         }
 
         // Delete that Record
         await employees.deleteOne({ _id: employeid });
 
         // Response
-        return res.json({Deleted:true});
+        return res.json({Deleted:true,type:"success"});
     }catch{
-        return res.json({Deleted:false});
+        return res.json({error:"Somthing Went Wrong",type:"danger"});
     }
 });
 
