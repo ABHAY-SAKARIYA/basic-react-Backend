@@ -29,7 +29,7 @@ router.post("/add", fetchuser, [
         // Validation error, showing bad request and error
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.json({error:"Enter Valid Values",type:"danger"});
+            return res.json({error:"Enter Valid Values Min 3 char required*",type:"danger"});
         }
 
         // Get The Data from Request
@@ -72,7 +72,7 @@ router.put("/update/:id", fetchuser, [
          // Validation error, showing bad request and error
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.json({error:"Enter Valid Values",type:"danger"});
+            return res.json({error:"Enter Valid Values Min 3 char required*",type:"danger"});
         }
         
         // Check feilds to be updated and creata an new object

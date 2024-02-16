@@ -27,7 +27,7 @@ router.post("/signin",[
         // sending bad response for error
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.json({error: error.array() });
+            return res.json({error:"Enter Valid Values Min 5char required for Username and 8char for password*",type:"danger"});
         }
         
         // get Data and Create an Secure Password using Bcrypt Js.
@@ -69,7 +69,7 @@ router.post("/login",[
         // if fields are not correct, send bad response
         const error = validationResult(req);
         if(!error.isEmpty()){
-            return res.json({error:error.array()});
+            return res.json({error:"Enter Valid Values Min 5char required for Username and 8char for password*",type:"danger"});
         }
 
         // get user input
