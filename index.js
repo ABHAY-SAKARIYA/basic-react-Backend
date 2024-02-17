@@ -1,7 +1,5 @@
 // Load env variables
-if(process.env.NODE_ENV != "production"){
-    require("dotenv").config();
-}
+require("dotenv").config();
 
 
 // import dependenceis
@@ -30,4 +28,4 @@ app.use("/data",employeController);
 
 
 // Start our server
-app.listen(process.env.PORT)
+app.listen(process.env.PORT || 3000)
