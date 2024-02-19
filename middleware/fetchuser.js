@@ -10,7 +10,7 @@ const jwt_secret = process.env.JWT_SECRET || "SecretKey";
 const fetchuser = async (req,res,next) => {
     const token = req.header("auth-token");
     if(!token){
-        res.json({error:"Login Is Required For This step.",type:"danger"});
+        return res.json({error:"Login Is Required For This step.",type:"danger"});
     }
     try{
         const data = jwt.verify(token,jwt_secret);
